@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:petugas_perpustakaan_kelas_c/app/data/constant/endpoint.dart';
 import 'package:petugas_perpustakaan_kelas_c/app/data/provider/api_provider.dart';
 import 'package:petugas_perpustakaan_kelas_c/app/data/provider/storage_provider.dart';
+import 'package:petugas_perpustakaan_kelas_c/app/modules/book/controllers/book_controller.dart';
 import 'package:petugas_perpustakaan_kelas_c/app/routes/app_pages.dart';
 import 'package:dio/dio.dart' as dio;
 
@@ -14,8 +15,9 @@ class AddBookController extends GetxController {
   final TextEditingController penerbitController = TextEditingController();
   final TextEditingController tahunTerbitController = TextEditingController();
   final loading = false.obs;
-
   final count = 0.obs;
+  final BookController _bookController = Get.find();
+
   @override
   void onInit() {
     super.onInit();
@@ -40,8 +42,8 @@ class AddBookController extends GetxController {
                 "penerbit": penerbitController.text.toString(),
                 "tahun_terbit": int.parse(tahunTerbitController.text.toString()),});
       if (response.statusCode == 201) {
-        await StorageProvider.write(StorageKey.status, "Succes");
-        Get.offAllNamed(Routes.BOOK);
+        _bookController.getData();
+        Get.back();
       }else {
         Get.snackbar("Sorry", "Buku Gagal Diinput", backgroundColor: Colors.orange);
       }
