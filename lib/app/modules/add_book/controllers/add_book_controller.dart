@@ -32,32 +32,41 @@ class AddBookController extends GetxController {
   void onClose() {
     super.onClose();
   }
-  add_book() async {loading(true);
-  try {
-    FocusScope.of(Get.context!).unfocus();
-    if (formkey.currentState!.validate()) {
-      final response = await ApiProvider.instance().post(Endpoint.book,
-          data: {"judul": judulController.text.toString(),
-                "penulis": penulisController.text.toString(),
-                "penerbit": penerbitController.text.toString(),
-                "tahun_terbit": int.parse(tahunTerbitController.text.toString()),});
-      if (response.statusCode == 201) {
-        _bookController.getData();
-        Get.back();
-      }else {
-        Get.snackbar("Sorry", "Buku Gagal Diinput", backgroundColor: Colors.orange);
+
+  add_book() async {
+    loading(true);
+    try {
+      FocusScope.of(Get.context!).unfocus();
+      if (formkey.currentState!.validate()) {
+        final response =
+            await ApiProvider.instance().post(Endpoint.book, data: {
+          "judul": judulController.text.toString(),
+          "penulis": penulisController.text.toString(),
+          "penerbit": penerbitController.text.toString(),
+          "tahun_terbit": int.parse(tahunTerbitController.text.toString()),
+        });
+        if (response.statusCode == 201) {
+          _bookController.getData();
+          Get.back();
+        } else {
+          Get.snackbar("Sorry", "Buku Gagal Diinput",
+              backgroundColor: Colors.orange);
+        }
       }
-    }loading(false);
-  } on dio.DioException catch (e) {loading(false);
-  if (e.response != null) {
-    if (e.response?.data != null) {
-      Get.snackbar("Sorry", "${e.response?.data['message']}",backgroundColor: Colors.orange);
+      loading(false);
+    } on dio.DioException catch (e) {
+      loading(false);
+      if (e.response != null) {
+        if (e.response?.data != null) {
+          Get.snackbar("Sorry", "${e.response?.data['message']}",
+              backgroundColor: Colors.orange);
+        }
+      } else {
+        Get.snackbar("Sorry", e.message ?? "", backgroundColor: Colors.red);
+      }
+    } catch (e) {
+      loading(false);
+      Get.snackbar("Error", e.toString(), backgroundColor: Colors.red);
     }
-  } else {
-    Get.snackbar("Sorry", e.message ?? "",backgroundColor: Colors.red);
-  }
-  } catch (e) {loading(false);
-  Get.snackbar("Error", e.toString(), backgroundColor: Colors.red);
-  }
   }
 }
