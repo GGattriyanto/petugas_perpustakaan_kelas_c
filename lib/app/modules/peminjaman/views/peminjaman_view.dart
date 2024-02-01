@@ -20,7 +20,7 @@ class PeminjamanView extends GetView<PeminjamanController> {
           DataPinjam dataPinjam = state[index];
           return ListTile(
             title: Text("${dataPinjam.user?.username}"),
-            subtitle: Text("${dataPinjam.book}\n${dataPinjam.status}"),
+            subtitle: Text("${dataPinjam.book?.judul}\n${dataPinjam.status}\nTanggal Pinjam : ${dataPinjam.tanggalPinjam}\nTanggal Kembali : ${dataPinjam.tanggalKembali}"),
           );
         },
         separatorBuilder: (context, index)=> Divider(),
